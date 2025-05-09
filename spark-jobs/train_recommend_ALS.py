@@ -28,7 +28,7 @@ PATH_APP = f"{PATH_PROGRAM}{config['app']}"
 PATH_MODEL = f"{PATH_PROGRAM}{config['model']}"
 PATH_DATA = f"{PATH_PROGRAM}{config['data']}"
 
-
+# This Function use for ingestion data to system
 def load_data(spark):
 
     df_reciped = spark.read.parquet(f"{PATH_DATA}/recipes.parquet")
@@ -51,6 +51,7 @@ def load_data(spark):
     
     return df_reciped, df_reviews
 
+# This function use for simple EDA 
 def eda(df_reciped, df_reviews):
 
     print("********************")
@@ -102,7 +103,7 @@ def eda(df_reciped, df_reviews):
     print("\nTop Recipe Name Rating")
     df_full.groupBy("Name").agg(F.mean(F.col("Rating")).alias("average_rating_by_cat")).orderBy(F.col("average_rating_by_cat").desc()).show(truncate = False, n = 5)
 
-
+# This function use for split data to 2 sets: training and test data
 def preprocess(df_reciped, df_reviews):
 
     train, test = df_reviews.randomSplit([0.90,0.10], 42)
@@ -111,7 +112,7 @@ def preprocess(df_reciped, df_reviews):
 
     return train, test
 
-
+# This Function use for training ALS model
 def training_model(train_data):
 
     print("**********")
@@ -142,6 +143,7 @@ def training_model(train_data):
 
     return model_artifact
 
+# This Function use for evaluate model
 def model_performance(test_data, model_artifact):
 
     print("**********************evaluate model**********************")
@@ -151,7 +153,7 @@ def model_performance(test_data, model_artifact):
     print("RMSE: ", rmse)
     print("**********************evaluate model**********************")
 
-
+# This function use for tuning model
 def tuning_evaluate_model(train_data):
 
     als = ALS(userCol="authorid", itemCol="recipeid", ratingCol="rating", coldStartStrategy="drop", seed=42)

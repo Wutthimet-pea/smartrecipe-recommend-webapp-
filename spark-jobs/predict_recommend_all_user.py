@@ -30,7 +30,7 @@ PATH_MODEL = f"{PATH_PROGRAM}{config['model']}"
 PATH_DATA = f"{PATH_PROGRAM}{config['data']}"
 
 
-
+# This Function use for ingestion data to system
 def load_data(spark):
 
     df_reciped = spark.read.parquet(f"{PATH_DATA}/recipes.parquet")
@@ -53,7 +53,7 @@ def load_data(spark):
     
     return df_reciped, df_reviews
 
-
+# This Function use for predicting recommend for each user
 def get_recomend_recipeid_for_user(model, reviewer_id, recipe, num_recommend, spark):
 
     data = [(x,) for x in reviewer_id]
@@ -71,7 +71,7 @@ def get_recomend_recipeid_for_user(model, reviewer_id, recipe, num_recommend, sp
 
     return recommend_df.show(truncate = False)
 
-
+# This Function use for predicting recommend for each reciped
 def get_recomend_user_for_each_reciped(model, recipe_id, recipe, num_recommend, spark):
 
     data = [(x,) for x in recipe_id]
